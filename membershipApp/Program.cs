@@ -1,4 +1,6 @@
-﻿namespace membershipApp
+﻿using membershipApp.models;
+
+namespace membershipApp
 {
     internal class Program
     {
@@ -8,27 +10,15 @@
         }
         public static void Run()
         {
-           Context DbContext= new Context();
-           System runSys= new System();
-
-           
-            Console.WriteLine("Admin Login[1]");
-            
-            if (!int.TryParse(Console.ReadLine(), out int userInput))
-            {
-                Console.WriteLine("Wrong input, try again!");
-                Console.ReadLine();
-            }
+            var employees = new List<Employee>();
+            Context DbContext = new Context();
+            Systemhandler runSys = new Systemhandler();
+            runSys.AdminLogin(employees);
 
 
-            switch (userInput)
-            {
-                case 1:runSys.AdminLogin();
-                    break;       
-            }
-           
+
         }
 
-       
+
     }
 }

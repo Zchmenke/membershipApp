@@ -11,13 +11,13 @@ using System.Threading.Tasks;
 
 namespace membershipApp
 {
-    public class System
+    public class Systemhandler
     {
         Context dbContext = new Context();
-        public void AdminLogin()
+        public void AdminLogin(List<Employee> employees)
         {
            
-            List<Employee> employees = dbContext.Employees.ToList();
+           // List<Employee> employees = dbContext.Employees.ToList();
 
             for (int i = 0; i < 3; i++)
             {
@@ -29,13 +29,14 @@ namespace membershipApp
                 if (employees.Contains(employees.Find(e => e.FullName == adminUsername))
                     && employees.Contains(employees.Find(e => e.Password == adminPassword)))
                 {
+                    Console.WriteLine("Welcome Admin, Choose action");
+                    return; // added return so it does not trigger the AdminUi function
                     AdminUi();
                 }
                 else
                 {
                     Console.WriteLine($"\tLogin name or password was incorrect. you have {2 - i} tries left. ");
-                    Console.ReadKey();
-                    Console.Clear();
+                   
                 }
 
             }
@@ -101,28 +102,32 @@ namespace membershipApp
             dbContext.Customers.Add(CustomerHolder);
             dbContext.SaveChanges();
 
-        }
-        public void GymEnter()
+        } 
+        public void GymEnter(List<Customer>customers) // method can take a fake list. or fake "Database"
         {
            
-            var tempList = dbContext.Customers.ToList();
-
+           // var tempList = dbContext.Customers.ToList(); 
+           
 
             Console.WriteLine("Insert your ID to enter");
+            
 
             int memberShipId = Convert.ToInt32(Console.ReadLine());
 
-            var tempCustomer = dbContext.Customers.Where
-                (c => c.ID == memberShipId).FirstOrDefault();
+            var tempCustomer = customers.Where
+                (c => c.ID == memberShipId).FirstOrDefault(); // using fake database instead of real database.
 
-            if (tempList.Contains
-                (tempList.Find(c => c.ID == memberShipId)))
+            if (customers.Contains
+                (customers.Find(c => c.ID == memberShipId))) // using fake database instead of real database.
             {
+               
                 Console.WriteLine($" Welcome {tempCustomer.FullName}");
                 tempCustomer.IsTraining = true;
                 dbContext.SaveChanges();
-
-
+            }
+            else
+            {
+                Console.WriteLine("There is no viable ID");
             }
 
 
@@ -153,19 +158,28 @@ namespace membershipApp
         }
         public void AdminUi()
         {
-            Console.WriteLine("Hello from ADMIN UI");
-            int userchoice = Convert.ToInt32(Console.ReadLine());
-           
-            switch (userchoice)
-            {
-                
-                case 1: RegisterEmployee();
-                    break;
-                 case 2:RegCustomerForThreeMonths();
-                    break;
-           
+            Console.WriteLine("Welcome Admin, Choose action");
 
-                
+            string userInput = Console.ReadLine();
+
+            if (int.TryParse(userInput, out int userChoice))
+            {
+                switch (userChoice)
+                {
+                    case 1:
+                        RegisterEmployee();
+                        break;
+                    case 2:
+                        RegCustomerForThreeMonths();
+                        break;
+                    default:
+                        Console.WriteLine("Invalid choice");
+                        break;
+                }
+            }
+            else
+            {
+                Console.WriteLine("Invalid input");
             }
         }
     }
